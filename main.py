@@ -1,136 +1,188 @@
-from math import sqrt
+import os
 
+def sortareNoteAlfabetic(allStudents):
+    return sorted(allStudents, key= lambda x: (x["nota"], x["nume"]))
 
-def prim(n):
-    if n < 2:
-        return False
-    if n == 2:
-        return True
-    if n % 2 == 0:
-        return False
-    for i in range(3, int(sqrt(n)) + 1, 2):
-        if n % i == 0:
-            return False
-    return True
+def printStudentiNoteAlfabetic(allStudents):
+    printStudents(sortareNoteAlfabetic(allStudents))
 
-def ex4(n):
-    for i in range(2, n):
-        if prim(i) & prim(n - i):
-            return i, n - i
-    return 0, 0
-
-def ex5(n):
-    n += 1
-    while True:
-        if prim(n) & prim(n + 2):
-            return n, n + 2
-        n += 1
-
-def ex6(n):
-    a = b = 1
-    while b <= n:
-        c = a + b
-        a = b
-        b = c
-    return b
-
-def ex7(n):
-    p = 1
-    for i in range(2, n//2+1):
-        if n % i == 0:
-            p *= i
-    return p
-
-def ex8(n):
-    nr = [0]*10
-    rez = 0
-    while n:
-        nr[n%10] += 1
-        n //= 10
-    for i in range(9, -1, -1):
-        while nr[i]:
-            rez = rez * 10 + i
-            nr[i] -= 1
-    return rez
-
-def ex9(n):
-    rez = 0
-    while n:
-        rez = rez * 10 + n % 10
-        n //= 10
-    return rez
-
-def ex10(n):
-    nr = [0]*10
-    rez = 0
-    while n:
-        nr[n % 10] += 1
-        n //= 10
-    for i in range(1, 10):
-        if nr[i]:
-            rez = i
-            nr[i] -= 1
-            break
-    for i in range(0, 10):
-        while nr[i]:
-            rez = rez * 10 + i
-            nr[i] -= 1
-    return rez
-
-
-def ex11(a, b):
-    nra = [0]*10
-    nrb = [0]*10
-    while a:
-        nra[a % 10] += 1
-        a //= 10
-    while b:
-        nrb[b % 10] += 1
-        b //= 10
-    for i in range(0, 10):
-        if (nra[i] & nrb[i] == 0) | (nra[i] == 0 & nrb[i]):
-            return False
-    return True
-
-def ex12(k):
-    n = 1
-    while True:
-        div = 2
-        cn = n
-        while cn > 1:
-            while cn % div == 0:
-                cn //= div
-                k -= 1
-                if k == 0:
-                    return div
-            div += 1
-        n += 1
-
-def sumaDiv(n):
+def medieStud(allStudents):
     sum = 0
-    for i in range(1, n // 2 + 1):
-        if n % i == 0:
-            sum += i
-    return sum
+    cont = 0
+    for stud in allStudents:
+        if stud["nota"] >= 5:
+            sum += stud["nota"]
+            cont += 1
+    
+    return sum / cont if cont else 0
 
-def ex14(n):
+def printMedieStud(allStudents):
+    print("Media studentilor cu note peste 5 este " + str(medieStud(allStudents)))
+
+def printTopNStudenti(allStudents):
+    n = int(input("Primii n: "))
+    sortedStudents = sortareNoteDesc(allStudents)
+    for i in range(n):
+        printStudent(sortedStudents[i])
+
+def printStudentiNoteDesc(allStudents):
+    printStudents(sortareNoteDesc(allStudents))
+
+def sortareNoteDesc(allStudents):
+    return sorted(allStudents, key= lambda x: x["nota"], reverse=True)
+
+def deleteStudentNotaMaiMica5(allStudents):
+    for stud in allStudents:
+        if stud["nota"] < 5:
+            allStudents.remove(stud)
+    printStudents(allStudents)
+
+def printStudentCuNumeInString(allStudents):
+    string = input("string: ")
+    for stud in allStudents:
+        if string in stud["nume"]:
+            printStudent(stud)
+
+def printStudentNotaMaiMare(allStudents):
+    nota = int(input("Nota: "))
+    for student in allStudents:
+        if student["nota"] >= nota:
+            printStudent(student)
+
+def printStudentNotaMax(allStudents):
+    nota = 0
+    for stud in allStudents:
+        nota = max(nota, stud["nota"])
+    for stud in allStudents:
+        if stud["nota"] == nota:
+            printStudent(stud)
+
+def deleteStudent(allStudents):
+    printStudents(allStudents)
+    id = int(input("\nid: "))
+    student = next((stud for stud in allStudents if stud["id"] == id), None)
+    
+    if student is not None:
+        allStudents.remove(student)
+        print("A fost sters studentul " + student["nume"])
+    else:
+        print("Nu exista niciun student cu id-ul " + str(id))
+
+def printOptions(options):
+    os.system('clear')
+    for i in range(len(options)):
+        print(str(i + 1) + ". " + options[i]["nume"])
+    print("x. Iesire\n")
+
+def printStudent(student):
+    print('\n')
+    print("id: " + str(student["id"]))
+    print("nume: " + student["nume"])
+    print("nota: " + str(student["nota"]))
+
+def printStudents(allStudents):
+    for student in allStudents:
+        printStudent(student)
+    
+def waitForX():
+    print('\n')
     while True:
-        if n+1 == sumaDiv(n+1):
-            return n + 1
-        n += 1
+        print("x. Iesire")
+        option = input()
+        if option == "x" or option == "X":
+            break
 
-def ex15(n):
-    while n:
-        if prim(n - 1) :
-            return n - 1
-        n -= 1
-    print("Nu exista numar prim mai mic ca n")
-    return 0
+def createStudent(id, nota, nume):
+    return {"id": id, "nume": nume, "nota": nota}
 
-def ex16(n):
-    while n:
-        if n - 1 == sumaDiv(n - 1):
-            return n - 1
-        n -= 1
-    print("Nu exista numar perfect mai mic n")
-    return 0
+def readStudent():
+    id = int(input("id: "))
+    nume = input("nume: ")
+    nota = int(input("nota: "))
+    return createStudent(id, nota, nume)
+    
+def addStudent(allStudents):
+    student = readStudent()
+    allStudents.append(student)
+
+def getId(student):
+    return student["id"]
+
+def getNota(student):
+    return student["nota"]
+
+def getNume(student):
+    return student["nume"]
+
+def setId(student, id):
+    student["id"] = id
+
+def setNota(student, nota):
+    student["nota"] = nota
+
+def setNume(student, nume):
+    student["nume"] = nume
+
+def main():
+    allStudents = []
+    options = [
+        {
+            "nume": "Afisare studenti",
+            "func": printStudents
+        },
+        {
+            "nume": "Adaugare student",
+            "func": addStudent
+        },
+        {
+            "nume": "Stergere student",
+            "func": deleteStudent
+        },
+        {
+            "nume": "Afisare student cu nota mai mare sau egala decat",
+            "func": printStudentNotaMaiMare
+        },
+        {
+            "nume": "Afisare student cu nota maxima",
+            "func": printStudentNotaMax
+        },
+        {
+            "nume": "Afisare student cu numele continut de un alt string",
+            "func": printStudentCuNumeInString
+        },
+        {
+            "nume": "Stergere student cu nota mai mica decat 5",
+            "func": deleteStudentNotaMaiMica5
+        },
+        {
+            "nume": "Sortare dupa note descrescator",
+            "func": printStudentiNoteDesc
+        },
+        {
+            "nume": "Primii n studenti dupa note",
+            "func": printTopNStudenti
+        },
+        {
+            "nume": "Media studentilor cu note peste 5",
+            "func": printMedieStud
+        },
+        {
+            "nume": "Sortare dupa nota si alfabetic",
+            "func": printStudentiNoteAlfabetic
+        }
+    ]
+
+    while True:
+        printOptions(options)
+
+        option = input("Optiune: ")
+
+        if option == "x" or option == 'X':
+            break
+        
+        option = int(option) - 1
+        options[option]["func"](allStudents)
+        
+        waitForX()
+
+main()
