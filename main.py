@@ -1,7 +1,7 @@
 import os
 
 def sortareNoteAlfabetic(allStudents):
-    return sorted(allStudents, key= lambda x: (x["nota"], x["nume"]))
+    return sorted(allStudents, key= lambda x: (-x["nota"], x["nume"]))
 
 def printStudentiNoteAlfabetic(allStudents):
     printStudents(sortareNoteAlfabetic(allStudents))
@@ -10,14 +10,14 @@ def medieStud(allStudents):
     sum = 0
     cont = 0
     for stud in allStudents:
-        if stud["nota"] >= 5:
-            sum += stud["nota"]
+        if getNota(stud) >= 5:
+            sum += getNota(stud)
             cont += 1
     
     return sum / cont if cont else 0
 
 def printMedieStud(allStudents):
-    print("Media studentilor cu note peste 5 este " + str(medieStud(allStudents)))
+    print("Media studentilor cu note peste 5 este ", medieStud(allStudents))
 
 def printTopNStudenti(allStudents):
     try:
@@ -35,45 +35,63 @@ def sortareNoteDesc(allStudents):
     return sorted(allStudents, key= lambda x: x["nota"], reverse=True)
 
 def deleteStudentNotaMaiMica5(allStudents):
+    studsToBeDeleted = []
     for stud in allStudents:
-        if stud["nota"] < 5:
-            allStudents.remove(stud)
+        if getNota(stud) < 5:
+            studsToBeDeleted.append(stud)
+    for stud in studsToBeDeleted:
+        allStudents.remove(stud)
+    return allStudents
+
+def printDeleteStudentNotaMaiMica5(allStudents):
+    allStudents = deleteStudentNotaMaiMica5(allStudents)
     printStudents(allStudents)
 
 def printStudentCuNumeInString(allStudents):
     string = input("string: ")
     for stud in allStudents:
-        if string in stud["nume"]:
+        if string in getNume(stud):
             printStudent(stud)
 
 def printStudentNotaMaiMare(allStudents):
     try:
         nota = int(input("Nota: "))
         for student in allStudents:
-            if student["nota"] >= nota:
+            if getNota(student) >= nota:
                 printStudent(student)
     except:
         print("Datele introduse nu sunt valide.")
 
-def printStudentNotaMax(allStudents):
+def getStudNotaMax(allStudents):
+    students = []
     nota = 0
     for stud in allStudents:
-        nota = max(nota, stud["nota"])
-    for stud in allStudents:
-        if stud["nota"] == nota:
-            printStudent(stud)
+        if nota < getNota(stud):
+            nota = getNota(stud)
+            students = [stud]
+        elif nota == getNota(stud):
+            students.append(stud)
+    return students
 
-def deleteStudent(allStudents):
+def printStudentNotaMax(allStudents):
+    printStudents(getStudNotaMax(allStudents))
+
+def deleteStudent(allStudents, id):
+    student = next((stud for stud in allStudents if getId(stud) == id), None)
+    if student is not None:
+        allStudents.remove(student)
+    return allStudents, student
+
+def printDeleteStudent(allStudents):
     printStudents(allStudents)
     try:
         id = int(input("\nid: "))
-        student = next((stud for stud in allStudents if stud["id"] == id), None)
-    
+        allStudents, student = deleteStudent(allStudents, id)
+
         if student is not None:
-            allStudents.remove(student)
-            print("A fost sters studentul " + student["nume"])
+            print("A fost sters studentul " + getNume(student))
         else:
-            print("Nu exista niciun student cu id-ul " + str(id))
+            print("Nu exista niciun student cu id-ul ", id)
     except:
         print("Datele introduse nu sunt valide")
 
@@ -85,9 +103,9 @@ def printOptions(options):
 
 def printStudent(student):
     print('\n')
-    print("id: " + str(student["id"]))
-    print("nume: " + student["nume"])
-    print("nota: " + str(student["nota"]))
+    print("id: ", getId(student))
+    print("nume: " + getNume(student))
+    print("nota: " + getNota(student))
 
 def printStudents(allStudents):
     for student in allStudents:
@@ -98,7 +116,7 @@ def waitForX():
     while True:
         print("x. Iesire")
         option = input()
-        if option == "x" or option == "X":
+        if option.lower() == 'x':
             break
 
 def createStudent(id, nota, nume):
@@ -116,7 +134,7 @@ def readStudent():
 
 def idUnic(student, allStudents):
     for stud in allStudents:
-        if stud["id"] == student["id"]:
+        if getId(stud) == getId(student):
             return False
     return True
 
@@ -156,7 +174,8 @@ def main():
         },
         {
             "nume": "Stergere student",
-            "func": deleteStudent
+            "func": printDeleteStudent
+        
         },
         {
             "nume": "Afisare student cu nota mai mare sau egala decat",
@@ -172,7 +191,7 @@ def main():
         },
         {
             "nume": "Stergere student cu nota mai mica decat 5",
-            "func": deleteStudentNotaMaiMica5
+            "func": printDeleteStudentNotaMaiMica5
         },
         {
             "nume": "Sortare dupa note descrescator",
@@ -197,7 +216,7 @@ def main():
 
         option = input("Optiune: ")
 
-        if option == "x" or option == 'X':
+        if option.lower() == "x":
             break
         
         option = int(option) - 1
