@@ -20,10 +20,13 @@ def printMedieStud(allStudents):
     print("Media studentilor cu note peste 5 este " + str(medieStud(allStudents)))
 
 def printTopNStudenti(allStudents):
-    n = int(input("Primii n: "))
-    sortedStudents = sortareNoteDesc(allStudents)
-    for i in range(n):
-        printStudent(sortedStudents[i])
+    try:
+        n = int(input("Primii n: "))
+        sortedStudents = sortareNoteDesc(allStudents)
+        for i in range(n):
+            printStudent(sortedStudents[i])
+    except:
+        print("Datele introduse nu sunt valide.")
 
 def printStudentiNoteDesc(allStudents):
     printStudents(sortareNoteDesc(allStudents))
@@ -44,10 +47,13 @@ def printStudentCuNumeInString(allStudents):
             printStudent(stud)
 
 def printStudentNotaMaiMare(allStudents):
-    nota = int(input("Nota: "))
-    for student in allStudents:
-        if student["nota"] >= nota:
-            printStudent(student)
+    try:
+        nota = int(input("Nota: "))
+        for student in allStudents:
+            if student["nota"] >= nota:
+                printStudent(student)
+    except:
+        print("Datele introduse nu sunt valide.")
 
 def printStudentNotaMax(allStudents):
     nota = 0
@@ -59,14 +65,17 @@ def printStudentNotaMax(allStudents):
 
 def deleteStudent(allStudents):
     printStudents(allStudents)
-    id = int(input("\nid: "))
-    student = next((stud for stud in allStudents if stud["id"] == id), None)
+    try:
+        id = int(input("\nid: "))
+        student = next((stud for stud in allStudents if stud["id"] == id), None)
     
-    if student is not None:
-        allStudents.remove(student)
-        print("A fost sters studentul " + student["nume"])
-    else:
-        print("Nu exista niciun student cu id-ul " + str(id))
+        if student is not None:
+            allStudents.remove(student)
+            print("A fost sters studentul " + student["nume"])
+        else:
+            print("Nu exista niciun student cu id-ul " + str(id))
+    except:
+        print("Datele introduse nu sunt valide")
 
 def printOptions(options):
     os.system('clear')
@@ -96,14 +105,25 @@ def createStudent(id, nota, nume):
     return {"id": id, "nume": nume, "nota": nota}
 
 def readStudent():
-    id = int(input("id: "))
-    nume = input("nume: ")
-    nota = int(input("nota: "))
-    return createStudent(id, nota, nume)
-    
+    try:
+        id = int(input("id: "))
+        nume = input("nume: ")
+        nota = int(input("nota: "))
+        return createStudent(id, nota, nume)
+    except:
+        print("Datele introduse nu sunt valide.")
+        return
+
+def idUnic(student, allStudents):
+    for stud in allStudents:
+        if stud["id"] == student["id"]:
+            return False
+    return True
+
 def addStudent(allStudents):
     student = readStudent()
-    allStudents.append(student)
+    if student is not None and idUnic(student, allStudents):
+        allStudents.append(student)
 
 def getId(student):
     return student["id"]
