@@ -26,5 +26,10 @@ class Problema:
     def setDeadline(self, deadline):
         self.__deadline = deadline
 
+    def getStudents(self):
+        return self.__studenti
+    def setStudents(self, students):
+        self.__studenti = students
+
     def __str__(self):
         return f'id: {self.__id}\nlab: {self.__lab}\ndesc: {self.__desc}\ndeadline: {self.__deadline}'

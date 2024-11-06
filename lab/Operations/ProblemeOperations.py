@@ -1,6 +1,22 @@
 from Domain.Problema import Problema
+from Operations.StudentOperations import StudentOperations
 
 class ProblemeOperations:
+    def afisareStudenti(self, problems):
+        self.afisareProbleme(problems)
+        id = int(input("id: "))
+        tuples = problems[self.findById(id, problems)].getStudents()
+        self.__afisareStudentiNota(tuples)
+    
+    def __afisareStudentiNota(self, students):
+        for stud in students:
+            print(stud["student"])
+            if stud["nota"] is not None:
+                print("Nota: " + stud["nota"])
+            else:
+                print("Nota: nedefinit")
+            print()
+
     def modificareProblema(self, problems):
         self.afisareProbleme(problems)
         problema = self.__read()

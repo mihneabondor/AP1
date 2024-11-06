@@ -15,6 +15,9 @@ class CerinteProbleme:
         }, {
             "nume" : "Cautare",
             "func" : problemOps.cautare
+        }, {
+            "nume" : "Afisare studenti atribuiti la o problema",
+            "func" : problemOps.afisareStudenti
         }]
 
     def __str__(self):
@@ -45,5 +48,5 @@ class CerinteProbleme:
         except ArithmeticError:
             print("ID-ul ales exista deja in lista de studenti!")
         except LookupError:
-            print("Nu exista niciun student cu acest id!")
+            print("Nu exista nicio problema cu acest id!")
     

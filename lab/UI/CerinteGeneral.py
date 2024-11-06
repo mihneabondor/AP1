@@ -1,5 +1,6 @@
 from UI.CerinteStudenti import CerinteStudenti
 from UI.CerinteProbleme import CerinteProbleme
+from Operations.CommonOperations import CommonOperations
 import os
 
 class CerinteGeneral:
@@ -13,6 +14,9 @@ class CerinteGeneral:
         }, {
             "nume": "Statistici",
             "func": self.handleStudents
+        }, {
+            "nume": "Asignare problema",
+            "func": self.handleAsignareProblema
         }]
     
     def __str__(self):
@@ -22,15 +26,36 @@ class CerinteGeneral:
         txt += '\nx. Iesire\n'
         return txt
     
-    def runOption(self, option, students):
+    def runOption(self, option, students, problems):
         if int(option) > len(self.__cerinte):
             raise ValueError
         try:
             option = int(option) - 1
-            self.__cerinte[option]["func"](students)
-                
+            if option == 0:
+                self.__cerinte[option]["func"](students)
+            elif option == 1:
+                self.__cerinte[option]["func"](problems)
+            elif option == 3:
+                self.__cerinte[option]["func"](problems, students)    
         except ValueError:
             print("Datele introduse nu sunt valide!")
+        except ArithmeticError:
+            print("ID-ul ales exista deja in lista de studenti!")
+        except LookupError:
+            print("Nu exista niciun student cu acest id!")
+
+    def waitForX(self):
+        print()
+        while True:
+            x = input("x. Iesire\n")
+            if x.lower() == "x":
+                break
+        
+    
+    def handleAsignareProblema(self, problems, students):
+        commonOps = CommonOperations()
+        commonOps.adaugareStudent(students, problems)
+
 
     def handleStudents(self, students):
         cerinte = CerinteStudenti()
