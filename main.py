@@ -1,4 +1,4 @@
-from domain import getNota, getId
+from domain import getId
 from prints import printStudents, printOptions, printDeleteStudentNotaMaiMica5, printMedieStud, printStudentCuNumeInString, printStudentiNoteAlfabetic, printStudentiNoteDesc, printStudentNotaMaiMare, printStudentNotaMax, printTopNStudenti, printDeleteStudent
     
 def waitForX():
@@ -11,7 +11,7 @@ def waitForX():
 
 def createStudent(id, nota, nume):
     if not str(id).isnumeric() or not str(nota).isnumeric():
-        assert(ValueError)
+        raise(ValueError)
     return {"id": int(id), "nume": nume, "nota": int(nota)}
 
 def readStudent():
@@ -23,11 +23,14 @@ def readStudent():
 def idUnic(student, allStudents):
     for stud in allStudents:
         if getId(stud) == getId(student):
-            raise(ValueError)
+            return False
+    return True
 
 def addStudent(allStudents):
     try:
         student = readStudent()
+        if not idUnic(student, allStudents):
+            raise(ValueError)
         allStudents.append(student)
     except ValueError:
         print("Datele introduse nu sunt valide")
