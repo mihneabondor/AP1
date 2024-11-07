@@ -18,6 +18,9 @@ class CerinteProbleme:
         }, {
             "nume" : "Afisare studenti atribuiti la o problema",
             "func" : problemOps.afisareStudenti
+        }, {
+            "nume" : "Notare problema",
+            "func" : problemOps.notareProblema
         }]
 
     def __str__(self):

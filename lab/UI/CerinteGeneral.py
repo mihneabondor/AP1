@@ -12,12 +12,19 @@ class CerinteGeneral:
             "nume": "Probleme",
             "func": self.handleProbleme
         }, {
-            "nume": "Statistici",
-            "func": self.handleStudents
-        }, {
             "nume": "Asignare problema",
             "func": self.handleAsignareProblema
+        }, {
+            "nume": "Studentii cu media sub 5",
+            "func": self.afisareStudentiNoteSub5
         }]
+
+    def afisareStudentiNoteSub5(self, students, problems):
+        commonOps = CommonOperations()
+        stud = commonOps.getStudentiNoteSub5(students, problems)
+        for st in stud:
+            print(st[0])
+            print(f'Medie: {st[1]}')
     
     def __str__(self):
         txt = ''
@@ -35,7 +42,7 @@ class CerinteGeneral:
                 self.__cerinte[option]["func"](students)
             elif option == 1:
                 self.__cerinte[option]["func"](problems)
-            elif option == 3:
+            else:
                 self.__cerinte[option]["func"](problems, students)    
         except ValueError:
             print("Datele introduse nu sunt valide!")

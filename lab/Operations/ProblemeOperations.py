@@ -2,17 +2,45 @@ from Domain.Problema import Problema
 from Operations.StudentOperations import StudentOperations
 
 class ProblemeOperations:
+    def notareProblema(self, problems):
+        tuples, id = self.getStudenti(problems)
+        print()
+        self.__afisareStudentiNota(tuples)
+        print()
+        idStudent = int(input("id student: "))
+        nota = int(input("nota: "))
+
+        problems[self.findById(id, problems)].setStudents(self.modificareNota(tuples, idStudent, nota))
+
+    def modificareNota(self, students, idStudent, nota):
+        for stud in students:
+            if stud["student"].getId() == idStudent:
+                stud["nota"] = nota
+        return students
+
     def afisareStudenti(self, problems):
+        tuples, id = self.getStudenti(problems)
+        self.__afisareStudentiNota(self.__sortareStudentiNota(tuples))
+
+    def __sorting_keys(self, entry):
+        nume = entry["student"].getNume()
+        nota = entry["nota"] if entry["nota"] is not None else float('-inf')
+        return (-nota, nume) 
+
+    def __sortareStudentiNota(self, studenti):
+        return sorted(studenti, key = self.__sorting_keys)
+
+    def getStudenti(self, problems):
         self.afisareProbleme(problems)
         id = int(input("id: "))
-        tuples = problems[self.findById(id, problems)].getStudents()
-        self.__afisareStudentiNota(tuples)
+        return problems[self.findById(id, problems)].getStudents(), id
+
     
     def __afisareStudentiNota(self, students):
         for stud in students:
             print(stud["student"])
             if stud["nota"] is not None:
-                print("Nota: " + stud["nota"])
+                print(f'Nota: {stud["nota"]}')
             else:
                 print("Nota: nedefinit")
             print()
@@ -47,7 +75,7 @@ class ProblemeOperations:
         id = int(input("id: "))
         lab = int(input("lab: "))
         desc = input("descriere: ")
-        deadline = input("deadline (dd/mm/yyyy): ")
+        deadline = input("deadline: ")
         return Problema(lab, id, desc, deadline)
     
     def __idUnic(self, problema, problems):
