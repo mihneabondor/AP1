@@ -1,9 +1,13 @@
 from UI.CerinteStudenti import CerinteStudenti
 from UI.CerinteProbleme import CerinteProbleme
+
 from Operations.CommonOperations import CommonOperations
+from Operations.ProblemeOperations import ProblemeOperations
+from Operations.StudentOperations import StudentOperations
+
 import os
 
-class CerinteGeneral:
+class CerinteCommon:
     def __init__(self):
         self.__cerinte = [{
             "nume": "Studenti",
@@ -60,8 +64,24 @@ class CerinteGeneral:
         
     
     def handleAsignareProblema(self, problems, students):
+        problemUI = CerinteProbleme()
+        problemUI.afisareProbleme(problems)
+        print()
+        idProblema = int(input("id problema: "))
+
+        problemeOps = ProblemeOperations()
+        problema = problems[problemeOps.findById(idProblema, problems)]
+
+        studentUI = CerinteStudenti()
+        studentUI.printStudents(students)
+        print()
+        idStudent = int(input("id student: "))
+
+        studOps = StudentOperations()
+        student = students[studOps.findById(students, idStudent)]
+
         commonOps = CommonOperations()
-        commonOps.adaugareStudent(students, problems)
+        commonOps.adaugareStudent(student, problema)
 
 
     def handleStudents(self, students):

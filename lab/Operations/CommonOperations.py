@@ -23,19 +23,7 @@ class CommonOperations:
                     note.append(int(stud["nota"]))
         return note
 
-    def adaugareStudent(self, students, problems):
-        problemOps = ProblemeOperations()
-        problemOps.afisareProbleme(problems)
-        print()
-        idProblema = int(input("id problema: "))
-        problema = problems[problemOps.findById(idProblema, problems)]
-
-        studentOps = StudentOperations()
-        studentOps.printStudents(students)
-        print()
-        idStudent = int(input("id student: "))
-        student = students[studentOps.findById(students, idStudent)]
-
+    def adaugareStudent(self, student, problema):
         assignedStudents = problema.getStudents()
         self.__idUnic(student, assignedStudents)
         assignedStudents.append({

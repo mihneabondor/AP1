@@ -1,10 +1,10 @@
 import os
-from UI.CerinteGeneral import CerinteGeneral
+from UI.CerinteCommon import CerinteCommon
 
 def main():
     students = []
     problems = []
-    cerinteGeneral = CerinteGeneral()
+    cerinteGeneral = CerinteCommon()
     os.system("clear")
     while True:
         try:
